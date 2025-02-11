@@ -1,6 +1,95 @@
-Library/
-Temp/
-Obj/
-Logs/
-UserSettings/
-Build/
+# ============================================
+#  Unity Project .gitignore
+# ============================================
+# Based on Unity's official recommendations
+# Source: https://github.com/github/gitignore/blob/main/Unity.gitignore
+# ============================================
+
+#  Unity Generated Folders (DO NOT TRACK)
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+#  Memory Captures & Recordings (Can be large)
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+#  Auto-Generated Unity Files (Not Needed)
+sysinfo.txt
+
+#  Ignore Packed Addressables
+[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+#  Ignore Temporary Streaming Assets
+[Aa]ssets/[Ss]treamingAssets/aa.meta
+[Aa]ssets/[Ss]treamingAssets/aa/*
+
+#  Unity's Auto-Generated Lighting Data
+[Aa]ssets/**/Lightmap-*.exr
+[Aa]ssets/**/ReflectionProbe-*.exr
+
+# ============================================
+#  IDE & Editor-Specific Ignore Rules
+# ============================================
+
+#  JetBrains Rider & Resharper
+[Aa]ssets/Plugins/Editor/JetBrains*
+.idea/
+
+#  Visual Studio / MonoDevelop
+.vs/
+ExportedObj/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+#  Visual Studio Code (optional, if not shared)
+.vscode/
+
+# ============================================
+#  Git & Version Control Ignore Rules
+# ============================================
+
+#  Git Large File Storage (LFS) Cache
+.git/lfs/
+
+#  Unity Package Builds (Do not track exported UnityPackages)
+*.unitypackage
+*.unitypackage.meta
+
+#  Android & iOS Build Files
+*.apk
+*.aab
+*.app
+
+#  Crashlytics Build Properties
+crashlytics-build.properties
+
+# ============================================
+#  OS-Specific Ignore Rules
+# ============================================
+
+#  macOS
+.DS_Store
+
+#  Windows
+Thumbs.db
+Desktop.ini
+
+#  Linux
+*.swp
