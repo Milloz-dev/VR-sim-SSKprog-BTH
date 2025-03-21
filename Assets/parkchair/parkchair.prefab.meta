@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4bfc726cb8ba03849be54d8f8aedf586
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 6296
+  packageName: Blur shader (Pro Only)
+  packageVersion: 1.1
+  assetPath: Assets/parkchair/parkchair.prefab
+  uploadId: 12957

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: eed3ece10d3b3404e8b077c5851019b9
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 6296
+  packageName: Blur shader (Pro Only)
+  packageVersion: 1.1
+  assetPath: Assets/Shaders/WaterBlurFinal.shader
+  uploadId: 12957

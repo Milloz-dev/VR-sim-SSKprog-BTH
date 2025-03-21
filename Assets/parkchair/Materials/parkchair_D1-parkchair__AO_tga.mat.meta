@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e5b4fa1435e82d04983b5dbd3db79f97
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 6296
+  packageName: Blur shader (Pro Only)
+  packageVersion: 1.1
+  assetPath: Assets/parkchair/Materials/parkchair_D1-parkchair__AO_tga.mat
+  uploadId: 12957
