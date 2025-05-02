@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.meta.xr.mrutilitykit": "74.0.1",
+    "com.meta.xr.mrutilitykit": "74.0.2",
     "com.meta.xr.sdk.core": "74.0.1",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.6",

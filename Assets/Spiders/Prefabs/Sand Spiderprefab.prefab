@@ -440,7 +440,7 @@ MonoBehaviour:
   maxSwaySpeed: 1.5
   animationSpeedMultiplier: 4
   animationSlowSpeedMultiplier: 0.9
-  minScale: 0.005
+  minScale: 0.003
   maxScale: 0.015
 --- !u!95 &-6054633938531674078
 Animator:
