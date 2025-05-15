@@ -111,8 +111,25 @@ void Update()
     IEnumerator Disappear()
     {
         isDisappearing = true;
+
+        if (spawner != null)
+        {
+            spawner.RemoveSpider(gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("Spider's spawner reference is missing!");
+        }
+
         Destroy(gameObject);
         yield break;
+    }
+
+    private SpiderSpawnScript spawner;
+
+    public void SetSpawner(SpiderSpawnScript s)
+    {
+        spawner = s;
     }
 
     public void SetTarget(Transform t)

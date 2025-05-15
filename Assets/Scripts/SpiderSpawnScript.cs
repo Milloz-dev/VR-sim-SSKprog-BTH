@@ -1,15 +1,16 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SpiderSpawnScript : MonoBehaviour
 {
-    public GameObject spiderPrefab; // ← renamed this!
+    public GameObject spiderPrefab;
     public Transform headset;
-
+    public int maxSpidersInScene = 10;
     public int spiderCount = 5;
     public float spawnRadius = 5f;
-    public float spawnInterval = 5f;
 
-    void Start()
+    private List<GameObject> activeSpiders = new List<GameObject>();
+    public void SpawnSpiders()
     {
         if (headset == null)
         {
@@ -17,18 +18,14 @@ public class SpiderSpawnScript : MonoBehaviour
             return;
         }
 
-        InvokeRepeating(nameof(SpawnSpiders), 0f, spawnInterval);
-    }
-
-    void SpawnSpiders()
-    {
         if (spiderPrefab == null)
         {
             Debug.LogError("Spider prefab is missing!");
             return;
         }
 
-        for (int i = 0; i < spiderCount; i++)
+       int spidersToSpawn = Mathf.Min(spiderCount, maxSpidersInScene - activeSpiders.Count);
+        for (int i = 0; i < spidersToSpawn; i++)
         {
             float angle = Random.Range(-90f, 90f); // half-circle
             float distance = Random.Range(spawnRadius * 0.8f, spawnRadius * 1.2f);
@@ -53,19 +50,24 @@ public class SpiderSpawnScript : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(-dir);
 
             GameObject spawnedSpider = Instantiate(spiderPrefab, spawnPos, lookRotation);
-
+            activeSpiders.Add(spawnedSpider);
 
             SpiderPathFollower pathFollower = spawnedSpider.GetComponent<SpiderPathFollower>();
             if (pathFollower != null)
             {
                 pathFollower.SetTarget(headset);
-                Debug.Log("SetTarget called on: " + spawnedSpider.name);
-
+                pathFollower.SetSpawner(this);
+                Debug.Log("Spider spawned and linked.");
             }
             else
             {
                 Debug.LogWarning("Spawned spider missing SpiderPathFollower component!");
             }
         }
+    }
+        public void RemoveSpider(GameObject spider)
+    {
+        if (activeSpiders.Contains(spider))
+            activeSpiders.Remove(spider);
     }
 }
