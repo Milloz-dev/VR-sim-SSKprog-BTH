@@ -1,0 +1,10 @@
+# ninja log v5
+8	960	7701495032237844	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	c6d60a9d7529a3a9
+10	973	7701495032375220	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	18fb9c7407714ab1
+3	987	7701495032500840	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	d58a4f3418b35b1e
+16	999	7701495032608123	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	4ea90e6850755dd2
+19	1034	7701495032988480	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	a1ebb16469f22b29
+0	1065	7701495033282422	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	4c682f8b96beb537
+13	1173	7701495034337106	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	7ab71a20e82cc94d
+5	1254	7701495035166091	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	f85c13ad205d3cd
+1254	1357	7701495036236388	C:/Users/Proj/Documents/Unity Projects/Hallucination_VR/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/w4212686/obj/arm64-v8a/libgame.so	70fb1d4d46e606e7

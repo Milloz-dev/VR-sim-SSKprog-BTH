@@ -3,155 +3,120 @@ using UnityEngine.XR;
 
 public class ControllerButtonSound : MonoBehaviour
 {
+    // 🎧 AudioSources for left hand controller buttons
     public AudioSource leftPrimaryButtonAudioSource;
     public AudioSource leftSecondaryButtonAudioSource;
     public AudioSource leftTriggerButtonAudioSource;
     public AudioSource leftGripButtonAudioSource;
+    public AudioSource leftJoystickClickAudioSource;
 
-    public AudioSource rightPrimaryButtonAudioSource;
-    public AudioSource rightSecondaryButtonAudioSource;
+    // 🎧 AudioSources for right hand trigger and grip
     public AudioSource rightTriggerButtonAudioSource;
+    public AudioSource rightGripButtonAudioSource;
 
-    public XRNode leftControllerNode = XRNode.LeftHand;
-    public XRNode rightControllerNode = XRNode.RightHand;
-
-    public BallCannon ballCannon;
-
+    // 🔧 References to gameplay systems triggered from right controller
     public CharacterSpawner characterSpawner;
     public RatSpawner ratSpawner;
     public SpiderSpawnScript spiderSpawner;
 
+    // Cached references to left/right XR controllers
     private InputDevice leftDevice;
     private InputDevice rightDevice;
 
-    // Per-button state tracking
-    private bool leftPrimaryWasPressed;
-    private bool leftSecondaryWasPressed;
-    private bool leftTriggerWasPressed;
-    private bool leftGripWasPressed;
-
-    private bool rightPrimaryWasPressed;
-    private bool rightSecondaryWasPressed;
-    private bool rightTriggerWasPressed;
-    private bool rightGripWasPressed;
-    private bool spawnerEnabled = true;
+    // Track which buttons were pressed last frame (to detect new presses)
+    private bool[] leftPressed = new bool[5];  // 0: Primary, 1: Secondary, 2: Trigger, 3: Grip, 4: Stick
+    private bool[] rightPressed = new bool[5];
 
     void Start()
     {
-        leftDevice = InputDevices.GetDeviceAtXRNode(leftControllerNode);
-        rightDevice = InputDevices.GetDeviceAtXRNode(rightControllerNode);
-
-        if (ballCannon == null)
-            ballCannon = GetComponent<BallCannon>();
+        // Get references to XR devices at startup
+        leftDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        rightDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
     }
 
     void Update()
     {
-        if (!leftDevice.isValid)
-            leftDevice = InputDevices.GetDeviceAtXRNode(leftControllerNode);
-        if (!rightDevice.isValid)
-            rightDevice = InputDevices.GetDeviceAtXRNode(rightControllerNode);
+        // Ensure devices are valid (re-acquire if disconnected)
+        if (!leftDevice.isValid) leftDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        if (!rightDevice.isValid) rightDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
-        CheckButtonPress(leftDevice, true);
-        CheckButtonPress(rightDevice, false);
+        // Check button input for both hands
+        CheckButton(leftDevice, true);
+        CheckButton(rightDevice, false);
     }
 
-    private void CheckButtonPress(InputDevice device, bool isLeft)
+    // Detect button state changes and trigger actions or sounds
+    private void CheckButton(InputDevice device, bool isLeft)
     {
-        bool primaryPressed, secondaryPressed, triggerPressed, gripPressed;
+        // Read current button states from the controller
+        device.TryGetFeatureValue(CommonUsages.primaryButton, out bool primary);
+        device.TryGetFeatureValue(CommonUsages.secondaryButton, out bool secondary);
+        device.TryGetFeatureValue(CommonUsages.triggerButton, out bool trigger);
+        device.TryGetFeatureValue(CommonUsages.gripButton, out bool grip);
+        device.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out bool stick);
 
-        device.TryGetFeatureValue(CommonUsages.primaryButton, out primaryPressed);
-        device.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryPressed);
-        device.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressed);
-        device.TryGetFeatureValue(CommonUsages.gripButton, out gripPressed);
+        // Get previous state array
+        bool[] previous = isLeft ? leftPressed : rightPressed;
 
-        // === Primary Button ===
-        if (primaryPressed && !(isLeft ? leftPrimaryWasPressed : rightPrimaryWasPressed))
-        {
-            if (!isLeft)
-            {
-                // Check if grip is also held for cannon combo
-                if (rightGripWasPressed)
-                {
-                        //Spawning
-                        spiderSpawner.SpawnSpiders();
-                        Debug.Log("Spawn spiders");
-   
-                }
-                else
-                {
-                    // Only play sound if NOT in combo
-                    PlaySound(rightPrimaryButtonAudioSource);
-                }
-            }
-            else
-            {
-                // Left controller primary (if needed)
-                PlaySound(leftPrimaryButtonAudioSource);
-            }
-        }
+        // If button is newly pressed this frame, call handler
+        if (primary && !previous[0]) OnButtonPressed(isLeft, 0);
+        if (secondary && !previous[1]) OnButtonPressed(isLeft, 1);
+        if (trigger && !previous[2]) OnButtonPressed(isLeft, 2);
+        if (grip && !previous[3]) OnButtonPressed(isLeft, 3);
+        if (stick && !previous[4]) OnButtonPressed(isLeft, 4);
 
-        // === Secondary Button ===
-        if (secondaryPressed && !(isLeft ? leftSecondaryWasPressed : rightSecondaryWasPressed))
-        {
-            if (isLeft || !rightGripWasPressed)
-                PlaySound(isLeft ? leftSecondaryButtonAudioSource : rightSecondaryButtonAudioSource);
-
-            // Right combo: Grip + Secondary = spawn rat
-            if (!isLeft && rightGripWasPressed)
-            {
-                Debug.Log("🐀 Right Grip + Secondary → RatSpawner");
-                if (ratSpawner != null)
-                    ratSpawner.RatTriggerAction();
-                else
-                    Debug.LogWarning("ratSpawner reference is NULL!");
-            }
-        }
-
-        // === Trigger Button ===
-        if (triggerPressed && !(isLeft ? leftTriggerWasPressed : rightTriggerWasPressed))
-        {
-            if (isLeft || !rightGripWasPressed)
-                PlaySound(isLeft ? leftTriggerButtonAudioSource : rightTriggerButtonAudioSource);
-
-            // Right combo: Grip + Trigger = spawn character
-            if (!isLeft && rightGripWasPressed)
-            {
-                Debug.Log("👤 Right Grip + Trigger → CharacterSpawner");
-                if (characterSpawner != null)
-                    characterSpawner.CharacterTriggerAction();
-                else
-                    Debug.LogWarning("characterSpawner reference is NULL!");
-            }
-        }
-
-        // === Grip Button ===
-        if (gripPressed && !(isLeft ? leftGripWasPressed : rightGripWasPressed))
-        {
-            if (isLeft)
-                PlaySound(leftGripButtonAudioSource); // Only left grip plays sound
-        }
-
-        // === Update State Tracking ===
+        // Update previous state tracking
         if (isLeft)
         {
-            leftPrimaryWasPressed = primaryPressed;
-            leftSecondaryWasPressed = secondaryPressed;
-            leftTriggerWasPressed = triggerPressed;
-            leftGripWasPressed = gripPressed;
+            leftPressed[0] = primary;
+            leftPressed[1] = secondary;
+            leftPressed[2] = trigger;
+            leftPressed[3] = grip;
+            leftPressed[4] = stick;
         }
         else
         {
-            rightPrimaryWasPressed = primaryPressed;
-            rightSecondaryWasPressed = secondaryPressed;
-            rightTriggerWasPressed = triggerPressed;
-            rightGripWasPressed = gripPressed;
+            rightPressed[0] = primary;
+            rightPressed[1] = secondary;
+            rightPressed[2] = trigger;
+            rightPressed[3] = grip;
+            rightPressed[4] = stick;
         }
     }
 
-    private void PlaySound(AudioSource audioSource)
+    // Handles action or audio per button press
+    private void OnButtonPressed(bool isLeft, int buttonIndex)
     {
-        if (audioSource != null && audioSource.clip != null)
-            audioSource.PlayOneShot(audioSource.clip);
+        if (isLeft)
+        {
+            // Left-hand button sounds
+            switch (buttonIndex)
+            {
+                case 0: PlaySound(leftPrimaryButtonAudioSource); break;
+                case 1: PlaySound(leftSecondaryButtonAudioSource); break;
+                case 2: PlaySound(leftTriggerButtonAudioSource); break;
+                case 3: PlaySound(leftGripButtonAudioSource); break;
+                case 4: PlaySound(leftJoystickClickAudioSource); break;
+            }
+        }
+        else
+        {
+            // Right-hand button actions and sounds
+            switch (buttonIndex)
+            {
+                case 0: if (characterSpawner != null) characterSpawner.CharacterTriggerAction(); break;
+                case 1: if (ratSpawner != null) ratSpawner.RatTriggerAction(); break;
+                case 2: PlaySound(rightTriggerButtonAudioSource); break;
+                case 3: PlaySound(rightGripButtonAudioSource); break;
+                case 4: if (spiderSpawner != null) spiderSpawner.SpawnSpiders(); break;
+            }
+        }
+    }
+
+    // Plays a sound from the given AudioSource
+    private void PlaySound(AudioSource source)
+    {
+        if (source != null && source.clip != null)
+            source.PlayOneShot(source.clip);
     }
 }

@@ -57,7 +57,7 @@ public class RatSpawner : MonoBehaviour
         ratReachedEnd = false;
         Debug.Log($"✅ Spawned rat behind anchor at {spawnPos}");
 
-        var runner = spawnedRat.GetComponent<RatRunMovement>();
+        var runner = spawnedRat.GetComponent<RatMovement2>();
         if (runner != null)
             runner.SetSpawner(this);
     }
@@ -121,7 +121,7 @@ public class RatSpawner : MonoBehaviour
 
         Debug.Log($"✅ Rat fallback-spawned outside room at {spawnPos}");
 
-        var runner = spawnedRat.GetComponent<RatRunMovement>();
+        var runner = spawnedRat.GetComponent<RatMovement2>();
         if (runner != null)
             runner.SetSpawner(this);
     }
